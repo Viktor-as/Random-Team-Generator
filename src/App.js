@@ -92,7 +92,7 @@ function App() {
         </form>
       </div>
       <div className="form">
-        <p>Enter player names</p>
+        <p>Enter player </p>
       <form>
         {
           players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id}/>)
