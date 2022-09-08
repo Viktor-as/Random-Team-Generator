@@ -9,7 +9,7 @@ function App() {
   const [teamSize, setTeamSize] = React.useState(2)
 
   function handleTeamSize(e){
-    setTeamSize(e.target.value);
+    setTeamSize(parseInt(e.target.value));
   }
   
   const [players, setPlayers] = React.useState([
@@ -34,7 +34,7 @@ function App() {
     })
    }
   
-   console.log(players)
+   console.log("players", players)
 
    function addNewPlayer(){
     setPlayers(prev=>{
@@ -50,7 +50,7 @@ function App() {
 
    const [generatedTeams, setGeneratedTeams] = React.useState()
   
-
+// Group shuffled players into teams (array of arrays)
   function chunk(array, size) {
     const chunkedArr = [];
     let index = 0;
@@ -71,7 +71,7 @@ function App() {
       }};
 
   function generateTeams() {
-    const newShuffledArr = players;
+    const newShuffledArr = players.map(ele=>ele);
     shuffle(newShuffledArr);  
     const slicedArray = chunk(newShuffledArr, teamSize);
     function renderGroups(){
@@ -79,9 +79,7 @@ function App() {
        return <Generate group={ele} key={index} index={index} />
       })
     };
-    setGeneratedTeams(renderGroups());
-      
-
+    setGeneratedTeams(renderGroups());   
   }
     
 

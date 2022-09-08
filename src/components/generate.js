@@ -1,4 +1,5 @@
 import React from 'react'
+import './generate.css'
 
 export default function Generate(props){
 
