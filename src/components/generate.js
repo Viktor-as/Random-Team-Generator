@@ -4,10 +4,9 @@ import './generate.css'
 export default function Generate(props){
 
 function renderGroup(arr){
-return arr.map((ele) => {
-    console.log(ele.name);
+return arr.map((ele, index) => {
     return (
-        <div className="player">
+        <div className="player" key={index}>
             {ele.name}
         </div>
     )

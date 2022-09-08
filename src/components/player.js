@@ -1,6 +1,5 @@
 import React from 'react'
-
-
+import './player.css'
 export default function Player(props){
 
 return (
@@ -10,8 +9,11 @@ return (
         placeholder="First Name"
         onChange={(event)=>props.handleChange(props.id, event)}
         name="firstName"
-        //value={formData.firstName}
+        value={props.name}
     />
+    <div className="close-container">
+        <span className="close" onClick={()=> props.deletePlayer(props.id)}></span>
+    </div>
 </div>
 
 

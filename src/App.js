@@ -82,7 +82,13 @@ function App() {
     setGeneratedTeams(renderGroups());   
   }
     
-
+function deletePlayer(id){
+  setPlayers(prev=>{
+    return prev.filter(ele=>{
+     return ele.id !== id
+    })
+  })
+}
   
   return (
     <div className="App">
@@ -96,7 +102,7 @@ function App() {
         <p>Enter player names</p>
       <form>
         {
-          players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id} key={ele.id} />)
+          players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id} key={ele.id} deletePlayer={deletePlayer} />)
         }
       </form>
 
