@@ -2,19 +2,19 @@ import React from 'react'
 
 export default function Generate(props){
 
-let team = props.shuffledPlayers.slice(0, props.teamSize); 
-
-function sliceTeams(size){
-    props.setShuffledPlayers(prev=>{
-    return prev.splice(size, prev.length)
-    })
-}
-
-sliceTeams(props.teamSize)
-
+function renderGroup(arr){
+return arr.map((ele) => {
+    console.log(ele.name);
+    return (
+        <div className="player">
+            {ele.name}
+        </div>
+    )
+})
+};
 return (
     <div className="container">
-        {team}
+        {renderGroup(props.group)}
     </div>
 )    
 }

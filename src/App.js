@@ -5,9 +5,7 @@ import { nanoid } from 'nanoid'
 import Generate from './components/generate'
 
 function App() {
-  
-
-  
+    
   const [teamSize, setTeamSize] = React.useState(2)
 
   function handleTeamSize(e){
@@ -51,38 +49,43 @@ function App() {
    }
 
    const [generatedTeams, setGeneratedTeams] = React.useState()
-
-   // Display Generated Teams from shuffled players
-  function generate(){
-    const generateArr = [];
-    for (let i = 0; i < players.length /2; i++){
-      generateArr.push(<Generate shuffledPlayers={shuffledPlayers}  setShuffledPlayers={setShuffledPlayers} teamSize={teamSize} />)
-  } 
-  console.log("generateArr" + generateArr)
-  return generateArr
-  }
-
   
 
-  const [shuffledPlayers, setShuffledPlayers] = React.useState([])
-
-  function generateTeams() {
-    //The Fisher Yates Method - shuffle our array
-    setShuffledPlayers(()=>{
-      const newShuffledArr = players;
-      for (let i = newShuffledArr.length -1; i > 0; i--) {
-        let j = Math.floor(Math.random() * i)
-        let k = newShuffledArr[i]
-        newShuffledArr[i] = newShuffledArr[j]
-        newShuffledArr[j] = k
-      }
-      return newShuffledArr;
-    });
-     
-    setGeneratedTeams(generate());   
+  function chunk(array, size) {
+    const chunkedArr = [];
+    let index = 0;
+    while (index < array.length) {
+      chunkedArr.push(array.slice(index, size + index));
+      index += size;
+    }
+    return chunkedArr;
   }
 
-  console.log("shufled players" + JSON.stringify(shuffledPlayers)); 
+ //The Fisher Yates Method - shuffle our array
+  function shuffle(array){
+        for (let i = array.length -1; i > 0; i--) {
+        let j = Math.floor(Math.random() * i)
+        let k = array[i]
+        array[i] = array[j]
+        array[j] = k
+      }};
+
+  function generateTeams() {
+    const newShuffledArr = players;
+    shuffle(newShuffledArr);  
+    const slicedArray = chunk(newShuffledArr, teamSize);
+    function renderGroups(){
+     return slicedArray.map((ele, index) => {
+       return <Generate group={ele} key={index} index={index} />
+      })
+    };
+    setGeneratedTeams(renderGroups());
+      
+
+  }
+    
+
+  
   return (
     <div className="App">
       <div className="team-size-form">
@@ -92,10 +95,10 @@ function App() {
         </form>
       </div>
       <div className="form">
-        <p>Enter player </p>
+        <p>Enter player names</p>
       <form>
         {
-          players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id}/>)
+          players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id} key={ele.id} />)
         }
       </form>
 
