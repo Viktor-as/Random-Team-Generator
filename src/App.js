@@ -111,20 +111,22 @@ function generateNextTeams(){
       slicedArray[i].sort(compare);
     }
     //Check if new teams are not repeating
-    let notRepeating = false;
-    if(notRepeating === false){
+    let notRepeating = [];
+    if(notRepeating.length === 0 || notRepeating.includes(false)){
       for(let i = 0; i < savedTeams.length; i++){
-        for(let j = 0; j < savedTeams[i].length; j++){          
-          if(savedTeams[i][j][0].name === slicedArray[j][0].name && savedTeams[i][j][1].name === slicedArray[j][1].name){
-            notRepeating = false;
-          } else {
-            notRepeating = true;
+        for(let j = 0; j < savedTeams[i].length; j++){
+          for(let l = 0; l < slicedArray.length; l++){          
+            if(savedTeams[i][j][0].name === slicedArray[l][0].name && savedTeams[i][j][1].name === slicedArray[l][1].name){
+              notRepeating.push(false);
+            } else {
+              notRepeating.push(true);
+            }
           }          
         }
       }
     }
     // if teams are repeating then recurse the function, else display that team
-    if(notRepeating === false) {
+    if(notRepeating.includes(false)) {
       generateNextTeams()
     } else {
       function renderGroups(){
