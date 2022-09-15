@@ -8,7 +8,10 @@ export default function Teams(props){
         <h1 className="teams-heading" >Generated teams:</h1>
         <div className="generated-teams">
           {props.displaySavedTeams}       
-          <div>{props.generatedTeams}</div> 
+          <div>
+          <h2 className="team-number">Generated team</h2>
+            {props.generatedTeams}
+          </div> 
         </div>
         <div className="buttons">
           <button type="button" className="reset-btn" onClick={props.reset} >Reset and change players</button>

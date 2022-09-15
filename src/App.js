@@ -119,14 +119,19 @@ function generateNextTeams(){
       slicedArray[i].sort(compare);
     }
     //Check if new teams are not repeating    
-    let notRepeating = [];   
+    const notRepeating = [];   
     if(maxCalls < 100){
       maxCalls++;
       if(notRepeating.length === 0 || notRepeating.includes(false)){
         for(let i = 0; i < savedTeams.length; i++){
           for(let j = 0; j < savedTeams[i].length; j++){
-            for(let l = 0; l < slicedArray.length; l++){          
-              if(savedTeams[i][j][0].name === slicedArray[l][0].name && savedTeams[i][j][1].name === slicedArray[l][1].name){
+            for(let l = 0; l < slicedArray.length; l++){ 
+              const conditions = []; 
+              for(let x = 0; x < teamSize; x++){
+                conditions.push(savedTeams[i][j][x].name === slicedArray[l][x].name)
+              }  
+              console.log("conditions",conditions);      
+              if(conditions.filter((rule) => rule === true).length === conditions.length){
                 notRepeating.push(false);
               } else {
                 notRepeating.push(true);
@@ -166,9 +171,10 @@ const [displaySavedTeams, setDisplaySavedTeams] = React.useState([]);
 
 function generateSavedTeams(){
   function renderSavedTeams(){
-    return savedTeams.map(saved=>{      
+    return savedTeams.map((saved, index)=>{      
       return (
         <div className="wrap">
+          <h2 className="team-number">Teams nr. {index+1}</h2>
           {
             saved.map((ele, index)=>{
             return <GenerateSavedTeams groupedTeams={ele} key={index}/>
