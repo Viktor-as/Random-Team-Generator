@@ -1,8 +1,8 @@
-.generate-container {
+.generate-saved-container{
     width: 100px;
     padding: 10px 30px;
     text-align: center;
     margin: 10px;
     border-radius: 10px;
-    background-color: rgba(173, 0, 135, 0.144);
+    background-color: rgba(21, 255, 0, 0.144);
 }

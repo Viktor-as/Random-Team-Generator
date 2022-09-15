@@ -1,0 +1,36 @@
+.teams-main{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.teams-main-container{
+    background: rgba(255, 255, 255, 0.548);
+    padding: 50px;
+    height:fit-content;
+    border-radius: 10px;
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    .teams-main-container {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  .teams-heading{
+    text-align: center;
+    color:rgb(173, 0, 136)
+  }
+
+  .buttons{
+     margin-top: 10px;
+      display: flex;
+      gap: 10px;
+  }
+
+  .generated-teams{      
+      display: flex;
+      justify-content: center;
+  }

@@ -1,12 +1,17 @@
 import React from 'react';
 import './App.css';
-import Player from './components/player';
-import { nanoid } from 'nanoid'
-import Generate from './components/generate'
+import { nanoid } from 'nanoid';
+import Generate from './components/generate';
+import { Route, Routes } from "react-router-dom";
+import Main from './pages/main';
+import Teams from './pages/teams'
+import { useNavigate} from "react-router-dom"
+import bg from './img/background.jpg'
+import GenerateSavedTeams from './components/generateSavedTeams'
 
 function App() {
-    
-  const [teamSize, setTeamSize] = React.useState(2)
+  const navigate = useNavigate();  
+  const [teamSize, setTeamSize] = React.useState(2);
 
   function handleTeamSize(e){
     setTeamSize(parseInt(e.target.value));
@@ -48,7 +53,7 @@ function App() {
     })
    }
 
-   const [generatedTeams, setGeneratedTeams] = React.useState()
+const [generatedTeams, setGeneratedTeams] = React.useState()
   
 // Group shuffled players into teams (array of arrays)
 function chunk(array, size) {
@@ -85,23 +90,26 @@ function compare( a, b ) {
   return 0;
 }
 
-  function generateTeams() {
-    const newShuffledArr = players.map(ele=>ele);
-    shuffle(newShuffledArr);  
-    const slicedArray = chunk(newShuffledArr, teamSize);
-    //sort teams by player name
-    for(let i = 0; i < slicedArray.length; i++){
-      slicedArray[i].sort(compare);
-    }
-    function renderGroups(){
-     return slicedArray.map((ele, index) => {
-       return <Generate group={ele} key={index} index={index} />
-      })
-    };
-    setTeamToSave(slicedArray);
-    setGeneratedTeams(renderGroups());   
+function generateTeams() {
+  const newShuffledArr = players.map(ele=>ele);
+  shuffle(newShuffledArr);  
+  const slicedArray = chunk(newShuffledArr, teamSize);
+  //sort teams by player name
+  for(let i = 0; i < slicedArray.length; i++){
+    slicedArray[i].sort(compare);
   }
-    
+  function renderGroups(){
+    return slicedArray.map((ele, index) => {
+      return <Generate group={ele} key={index} />
+    })
+  };
+  setTeamToSave(slicedArray);
+  setGeneratedTeams(renderGroups());   
+}
+
+// maxCalls prevents from calling infinite recurse function in generateNextTeams(). When all possible team variations are already found.
+let maxCalls=0;
+
 function generateNextTeams(){
   const newShuffledArr = players.map(ele=>ele);
     shuffle(newShuffledArr);  
@@ -110,33 +118,39 @@ function generateNextTeams(){
     for(let i = 0; i < slicedArray.length; i++){
       slicedArray[i].sort(compare);
     }
-    //Check if new teams are not repeating
-    let notRepeating = [];
-    if(notRepeating.length === 0 || notRepeating.includes(false)){
-      for(let i = 0; i < savedTeams.length; i++){
-        for(let j = 0; j < savedTeams[i].length; j++){
-          for(let l = 0; l < slicedArray.length; l++){          
-            if(savedTeams[i][j][0].name === slicedArray[l][0].name && savedTeams[i][j][1].name === slicedArray[l][1].name){
-              notRepeating.push(false);
-            } else {
-              notRepeating.push(true);
-            }
-          }          
+    //Check if new teams are not repeating    
+    let notRepeating = [];   
+    if(maxCalls < 100){
+      maxCalls++;
+      if(notRepeating.length === 0 || notRepeating.includes(false)){
+        for(let i = 0; i < savedTeams.length; i++){
+          for(let j = 0; j < savedTeams[i].length; j++){
+            for(let l = 0; l < slicedArray.length; l++){          
+              if(savedTeams[i][j][0].name === slicedArray[l][0].name && savedTeams[i][j][1].name === slicedArray[l][1].name){
+                notRepeating.push(false);
+              } else {
+                notRepeating.push(true);
+              }
+            }          
+          }
         }
       }
-    }
-    // if teams are repeating then recurse the function, else display that team
-    if(notRepeating.includes(false)) {
-      generateNextTeams()
+      // if teams are repeating then recurse the function, else display that team
+      if(notRepeating.includes(false)) {
+        generateNextTeams()
+      } else {
+        function renderGroups(){
+          return slicedArray.map((ele, index) => {
+            return <Generate group={ele} key={index} />
+           })
+         };
+         setTeamToSave(slicedArray);
+         setGeneratedTeams(renderGroups());  
+      }
     } else {
-      function renderGroups(){
-        return slicedArray.map((ele, index) => {
-          return <Generate group={ele} key={index} index={index} />
-         })
-       };
-       setTeamToSave(slicedArray);
-       setGeneratedTeams(renderGroups());  
+      alert("Sorry, could not find any new teams")
     }
+    
 }
 
 function deletePlayer(id){
@@ -148,6 +162,28 @@ function deletePlayer(id){
 }
 
 const [savedTeams, setSavedTeams] = React.useState([]);
+const [displaySavedTeams, setDisplaySavedTeams] = React.useState([]);
+
+function generateSavedTeams(){
+  function renderSavedTeams(){
+    return savedTeams.map(saved=>{      
+      return (
+        <div className="wrap">
+          {
+            saved.map((ele, index)=>{
+            return <GenerateSavedTeams groupedTeams={ele} key={index}/>
+            })
+          }
+        </div>
+      )    
+    })
+  }; 
+  setDisplaySavedTeams(renderSavedTeams())
+}
+
+React.useEffect(()=>{
+  generateSavedTeams()
+},[savedTeams])
 
 function saveTeam(){
   setSavedTeams(prev=>{
@@ -155,35 +191,23 @@ function saveTeam(){
       ...prev,
       teamToSave
     ]
-  })
+  });  
+}
+
+function reset(){
+  setSavedTeams([]);
+  navigate("/");
 }
   
 console.log("savedTeams", savedTeams);
+console.log("displaySavedTeams", displaySavedTeams);
 
   return (
-    <div className="App">
-      <div className="team-size-form">
-        <form >
-          <p>Enter the number of players in a team</p>
-        <input type="number" name="teamSize" onChange={handleTeamSize} value={teamSize}/>
-        </form>
-      </div>
-      <div className="form">
-        <p>Enter player names</p>
-      <form>
-        {
-          players.map(ele=> <Player name={ele.name} handleChange={handleChange} id={ele.id} key={ele.id} deletePlayer={deletePlayer} />)
-        }
-      </form>
-
-    
-      <button type="button" className="add-player" onClick={addNewPlayer} >Add one more player</button>
-      <button type="button" className="generate-btn" onClick={generateTeams} >Generate Teams</button>
-      <button type="button" className="generate-btn" onClick={saveTeam} >Confirm Teams</button>
-      <button type="button" className="generate-btn" onClick={generateNextTeams} >Generate Next Teams</button>
-      <p>Generated teams:</p>
-      {generatedTeams}
-      </div>
+    <div className="app" style={{ backgroundImage: `url(${bg})` }}>
+      <Routes>  
+        <Route path='/' element={<Main handleTeamSize={handleTeamSize} teamSize={teamSize} players={players} handleChange={handleChange} deletePlayer={deletePlayer} addNewPlayer={addNewPlayer} generateTeams={generateTeams} navigate={navigate} />}/>
+        <Route path='/teams' element={<Teams generatedTeams={generatedTeams} saveTeam={saveTeam} generateNextTeams={generateNextTeams} reset={reset} displaySavedTeams={displaySavedTeams}   />}/>
+      </Routes>  
     </div>
   );
 }

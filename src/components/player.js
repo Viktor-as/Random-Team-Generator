@@ -11,12 +11,10 @@ return (
         name="firstName"
         value={props.name}
     />
-    <div className="close-container">
-        <span className="close" onClick={()=> props.deletePlayer(props.id)}></span>
+    <div className="close-container" onClick={()=> props.deletePlayer(props.id)}>
+        <span className="close" ></span>
     </div>
 </div>
-
-
-
 )
 }
+
