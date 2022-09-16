@@ -39,3 +39,12 @@
     transform: rotate(-45deg);
   }
 
+/* Mobile response */
+
+@media only screen and (max-width: 768px) {
+
+  .close-container{
+    left: 7px;
+  } 
+
+}

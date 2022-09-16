@@ -1,5 +1,5 @@
 .main{
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,6 +10,7 @@
     padding: 50px;
     height:fit-content;
     border-radius: 10px;
+    margin: 100px 20px;
 }
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
@@ -43,3 +44,14 @@ input, select {
     text-align: center;
     color:rgb(173, 0, 136);
   }
+
+
+/* Mobile response */
+
+@media only screen and (max-width: 768px) {
+  .main-container{
+    padding: 20px 20px;  
+    width: 90vw;  
+}
+
+}
