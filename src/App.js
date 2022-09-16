@@ -17,12 +17,18 @@ function App() {
     setTeamSize(parseInt(e.target.value));
   }
   
-  const [players, setPlayers] = React.useState([
+  const [players, setPlayers] = React.useState(
+    JSON.parse(localStorage.getItem("players")) || 
+    [
     {
       id: nanoid(),
       name: ""
     }
   ])
+
+  React.useEffect(() => {
+      localStorage.setItem("players", JSON.stringify(players))
+  }, [players])
 
   function handleChange(id, event) {
     setPlayers(prev=>{
@@ -53,7 +59,10 @@ function App() {
     })
    }
 
-const [generatedTeams, setGeneratedTeams] = React.useState()
+const [generatedTeams, setGeneratedTeams] = React.useState([])
+
+
+
   
 // Group shuffled players into teams (array of arrays)
 function chunk(array, size) {
@@ -166,8 +175,14 @@ function deletePlayer(id){
   })
 }
 
-const [savedTeams, setSavedTeams] = React.useState([]);
+const [savedTeams, setSavedTeams] = React.useState(
+  JSON.parse(localStorage.getItem("savedTeams")) || []
+);
 const [displaySavedTeams, setDisplaySavedTeams] = React.useState([]);
+
+React.useEffect(() => {
+  localStorage.setItem("savedTeams", JSON.stringify(savedTeams))
+}, [savedTeams])
 
 function generateSavedTeams(){
   function renderSavedTeams(){
@@ -219,3 +234,4 @@ console.log("displaySavedTeams", displaySavedTeams);
 }
 
 export default App;
+
