@@ -44,8 +44,6 @@ function App() {
       })
     })
    }
-  
-   console.log("players", players)
 
    function addNewPlayer(){
     setPlayers(prev=>{
@@ -138,8 +136,7 @@ function generateNextTeams(){
               const conditions = []; 
               for(let x = 0; x < teamSize; x++){
                 conditions.push(savedTeams[i][j][x].name === slicedArray[l][x].name)
-              }  
-              console.log("conditions",conditions);      
+              }                  
               if(conditions.filter((rule) => rule === true).length === conditions.length){
                 notRepeating.push(false);
               } else {
@@ -219,9 +216,6 @@ function reset(){
   setSavedTeams([]);
   navigate("/");
 }
-  
-console.log("savedTeams", savedTeams);
-console.log("displaySavedTeams", displaySavedTeams);
 
   return (
     <div className="app" style={{ backgroundImage: `url(${bg})` }}>
